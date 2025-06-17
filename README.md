@@ -16,7 +16,7 @@ cargo test --release --lib   # To run library tests
 If everything goes as planned, I should complete about one challenge every week. Here's a recap of everything solved so far :
 
 - [ ] [Set 1](https://cryptopals.com/sets/1) (1-8)
-    - [ ] Challenge 01
+    - [x] Challenge 01
     - [ ] Challenge 02
     - [ ] Challenge 03
     - [ ] Challenge 04
