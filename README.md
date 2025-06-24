@@ -17,7 +17,7 @@ If everything goes as planned, I should complete about one challenge every week.
 
 - [ ] [Set 1](https://cryptopals.com/sets/1) (1-8)
     - [x] Challenge 01
-    - [ ] Challenge 02
+    - [x] Challenge 02
     - [ ] Challenge 03
     - [ ] Challenge 04
     - [ ] Challenge 05

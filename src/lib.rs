@@ -24,6 +24,10 @@ pub fn hex_to_bytes(hex: &str) -> Result<Vec<u8>, &'static str> {
     Ok(bytes)
 }
 
+pub fn bytes_to_hex(bytes: &[u8]) -> String {
+    bytes.iter().map(|b| format!("{:02x}", b)).collect()
+}
+
 pub fn bytes_to_base64(bytes: &[u8]) -> String {
     const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -64,6 +68,14 @@ pub fn hex_to_base64(hex: &str) -> Result<String, &'static str> {
     Ok(bytes_to_base64(&bytes))
 }
 
+pub fn xor(a: &[u8], b: &[u8]) -> Result<Vec<u8>, &'static str> {
+    if a.len() != b.len() {
+        return Err("Buffers must be equal length");
+    }
+
+    Ok(a.iter().zip(b.iter()).map(|(x, y)| x ^ y).collect())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -78,10 +90,25 @@ mod tests {
     }
 
     #[test]
+    fn test_bytes_to_hex() {
+        assert_eq!(bytes_to_hex(b"Hello"), "48656c6c6f");
+        assert_eq!(bytes_to_hex(&[0, 255, 16]), "00ff10");
+        assert_eq!(bytes_to_hex(&[]), "");
+    }
+
+    #[test]
     fn test_bytes_to_base64() {
         assert_eq!(bytes_to_base64(b"Hello"), "SGVsbG8=");
         assert_eq!(bytes_to_base64(b"Hi"), "SGk=");
         assert_eq!(bytes_to_base64(b"H"), "SA==");
         assert_eq!(bytes_to_base64(b""), "");
+    }
+
+    #[test]
+    fn test_xor() {
+        assert_eq!(xor(&[1, 2, 3], &[4, 5, 6]).unwrap(), vec![5, 7, 5]);
+        assert_eq!(xor(&[0xff], &[0x00]).unwrap(), vec![0xff]);
+        assert_eq!(xor(&[0xaa], &[0xaa]).unwrap(), vec![0x00]);
+        assert!(xor(&[1, 2], &[1]).is_err());
     }
 }
