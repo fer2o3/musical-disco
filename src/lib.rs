@@ -68,12 +68,11 @@ pub fn hex_to_base64(hex: &str) -> Result<String, &'static str> {
     Ok(bytes_to_base64(&bytes))
 }
 
-pub fn xor(a: &[u8], b: &[u8]) -> Result<Vec<u8>, &'static str> {
-    if a.len() != b.len() {
-        return Err("Buffers must be equal length");
-    }
-
-    Ok(a.iter().zip(b.iter()).map(|(x, y)| x ^ y).collect())
+pub fn xor(a: &[u8], b: &[u8]) -> Vec<u8> {
+    a.iter()
+        .enumerate()
+        .map(|(i, &x)| x ^ b[i % b.len()])
+        .collect()
 }
 
 #[cfg(test)]
@@ -106,9 +105,8 @@ mod tests {
 
     #[test]
     fn test_xor() {
-        assert_eq!(xor(&[1, 2, 3], &[4, 5, 6]).unwrap(), vec![5, 7, 5]);
-        assert_eq!(xor(&[0xff], &[0x00]).unwrap(), vec![0xff]);
-        assert_eq!(xor(&[0xaa], &[0xaa]).unwrap(), vec![0x00]);
-        assert!(xor(&[1, 2], &[1]).is_err());
+        assert_eq!(xor(&[1, 2, 3], &[4, 5, 6]), vec![5, 7, 5]);
+        assert_eq!(xor(&[0xff], &[0x00]), vec![0xff]);
+        assert_eq!(xor(&[0xaa], &[0xaa]), vec![0x00]);
     }
 }
